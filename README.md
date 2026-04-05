@@ -15,25 +15,25 @@ A comprehensive, production-ready **Student Management System** for schools, col
 ## 📸 Screenshots
 
 ### 🔐 Login Page
-![Login Page](screenshots/login-page.png)
+![Login Page](screenshots/login-page.PNG)
 
 ### 👑 Admin Dashboard
-![Admin Dashboard](screenshots/admin-dashboard.png)
+![Admin Dashboard](screenshots/admin-dashboard.PNG)
 
 ### 👨‍🏫 Teacher Dashboard
-![Teacher Dashboard](screenshots/teacher-dashboard.png)
+![Teacher Dashboard](screenshots/teacher-dashboard.PNG)
 
 ### 👨‍🎓 Student Dashboard
-![Student Dashboard](screenshots/student-dashboard.png)
+![Student Dashboard](screenshots/student-dashboard.PNG)
 
 ### 📝 Create Assignment
-![Create Assignment](screenshots/create-assignment.png)
+![Create Assignment](screenshots/create-assignment.PNG)
 
 ### 📊 Grades View
-![Grades View](screenshots/grades-view.png)
+![Grades View](screenshots/view_grades.PNG)
 
 ### 💰 Salary Management
-![Salary Management](screenshots/salary-management.png)
+![Salary Management](screenshots/teacher_salary_view.PNG)
 
 ## ✨ Features
 
