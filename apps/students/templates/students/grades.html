@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}My Grades{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-success text-white mb-4">
+            <div class="card-body">
+                <h2 class="mb-0"><i class="fas fa-star me-2"></i>My Grades</h2>
+                <p class="mb-0 mt-2">View all your grades and academic performance</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="stat-card text-center">
+            <h3>{{ total_subjects }}</h3>
+            <p class="text-muted mb-0">Subjects Taken</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="stat-card text-center">
+            <h3>{{ average_percentage }}%</h3>
+            <p class="text-muted mb-0">Average Score</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="stat-card text-center">
+            <h3>{{ highest_grade.grade_letter|default:"N/A" }}</h3>
+            <p class="text-muted mb-0">Highest Grade</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-table me-2"></i>All Grades</h5>
+            </div>
+            <div class="card-body">
+                {% if grades %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Exam Type</th>
+                                    <th>Marks Obtained</th>
+                                    <th>Total Marks</th>
+                                    <th>Percentage</th>
+                                    <th>Grade</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for grade in grades %}
+                                    <tr>
+                                        <td>{{ grade.subject.name }}</td>
+                                        <td>{{ grade.exam_type }}</td>
+                                        <td>{{ grade.marks_obtained }}</td>
+                                        <td>{{ grade.total_marks }}</td>
+                                        <td>{{ grade.percentage|floatformat:1 }}%</td>
+                                        <td>
+                                            <span class="badge {% if grade.grade_letter == 'F' %}bg-danger{% elif grade.grade_letter == 'A' %}bg-success{% else %}bg-primary{% endif %}">
+                                                {{ grade.grade_letter }}
+                                            </span>
+                                        </td>
+                                        <td>{{ grade.uploaded_at|date:"M d, Y" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">No grades available yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

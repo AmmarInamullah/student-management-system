@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Salary Details{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-info text-white mb-4">
+            <div class="card-body">
+                <h2 class="mb-0"><i class="fas fa-money-bill me-2"></i>Salary Details</h2>
+                <p class="mb-0 mt-2">View your salary history and payment status</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="stat-card text-center">
+            <h3>${{ total_earned }}</h3>
+            <p class="text-muted mb-0">Total Earned</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="stat-card text-center">
+            <h3>${{ total_paid }}</h3>
+            <p class="text-muted mb-0">Total Paid</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="stat-card text-center">
+            <h3>${{ total_pending }}</h3>
+            <p class="text-muted mb-0">Pending Amount</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-history me-2"></i>Salary History</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Amount</th>
+                                <th>Bonus</th>
+                                <th>Deduction</th>
+                                <th>Net Amount</th>
+                                <th>Status</th>
+                                <th>Payment Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for salary in salaries %}
+                            <tr>
+                                <td>{{ salary.month|date:"F Y" }}</td>
+                                <td>${{ salary.amount }}</td>
+                                <td>${{ salary.bonus }}</td>
+                                <td>${{ salary.deduction }}</td>
+                                <td>${{ salary.net_amount }}</td>
+                                <td>
+                                    {% if salary.payment_status == 'paid' %}
+                                        <span class="badge bg-success">Paid</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ salary.payment_date|date:"M d, Y"|default:"-" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">No salary records found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

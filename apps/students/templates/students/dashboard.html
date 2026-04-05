@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-body">
+                <h2 class="mb-0">
+                    <i class="fas fa-user-graduate me-2"></i>
+                    Welcome, {{ user.get_full_name|default:user.username }}!
+                </h2>
+                <p class="mb-0 mt-2">
+                    Student ID: {{ student.student_id }} | 
+                    Department: {{ student.department.name|default:"Not Assigned" }} | 
+                    Year: {{ student.year_level }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row">
+    <div class="col-md-3 mb-3">
+        <div class="stat-card text-center">
+            <i class="fas fa-book-open fa-2x text-primary"></i>
+            <h3>{{ enrollment_count }}</h3>
+            <p class="text-muted mb-0">Enrolled Subjects</p>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stat-card text-center">
+            <i class="fas fa-chart-line fa-2x text-success"></i>
+            <h3>{{ gpa }}</h3>
+            <p class="text-muted mb-0">Current GPA</p>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stat-card text-center">
+            <i class="fas fa-calendar-check fa-2x text-info"></i>
+            <h3>{{ attendance_rate }}%</h3>
+            <p class="text-muted mb-0">Attendance Rate</p>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stat-card text-center">
+            <i class="fas fa-tasks fa-2x text-warning"></i>
+            <h3>{{ pending_count }}</h3>
+            <p class="text-muted mb-0">Pending Assignments</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Enrolled Subjects -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-book me-2"></i>My Subjects</h5>
+            </div>
+            <div class="card-body">
+                {% if enrollments %}
+                    <div class="list-group">
+                        {% for enrollment in enrollments %}
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">{{ enrollment.subject.name }}</h6>
+                                        <small class="text-muted">
+                                            Code: {{ enrollment.subject.code }} | 
+                                            Credits: {{ enrollment.subject.credits }}
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-success">Active</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">No subjects enrolled yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Assignments -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Pending Assignments</h5>
+            </div>
+            <div class="card-body">
+                {% if pending_assignments %}
+                    {% for assignment in pending_assignments %}
+                        <div class="border-bottom pb-2 mb-2">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <strong>{{ assignment.title }}</strong>
+                                    <br>
+                                    <small class="text-muted">{{ assignment.subject.name }}</small>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-danger">Due: {{ assignment.due_date|date:"M d, Y" }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted mb-0">No pending assignments. Great job!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Grades -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-star me-2"></i>Recent Grades</h5>
+            </div>
+            <div class="card-body">
+                {% if grades %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Exam/Assignment</th>
+                                    <th>Marks</th>
+                                    <th>Percentage</th>
+                                    <th>Grade</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for grade in grades|slice:":10" %}
+                                    <tr>
+                                        <td>{{ grade.subject.name }}</td>
+                                        <td>{{ grade.exam_type }}</td>
+                                        <td>{{ grade.marks_obtained }}/{{ grade.total_marks }}</td>
+                                        <td>{{ grade.percentage|floatformat:1 }}%</td>
+                                        <td>
+                                            <span class="badge {% if grade.grade_letter == 'F' %}bg-danger{% elif grade.grade_letter == 'A' %}bg-success{% else %}bg-primary{% endif %}">
+                                                {{ grade.grade_letter }}
+                                            </span>
+                                        </td>
+                                        <td>{{ grade.uploaded_at|date:"M d, Y" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'student_grades' %}" class="btn btn-outline-primary">View All Grades</a>
+                        <a href="{% url 'student_attendance' %}" class="btn btn-outline-info">View Attendance</a>
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">No grades available yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

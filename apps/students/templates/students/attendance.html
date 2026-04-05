@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}My Attendance{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-info text-white mb-4">
+            <div class="card-body">
+                <h2 class="mb-0"><i class="fas fa-calendar-check me-2"></i>My Attendance</h2>
+                <p class="mb-0 mt-2">Track your attendance records</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    {% for subject, data in attendance_by_subject.items %}
+    <div class="col-md-4 mb-3">
+        <div class="stat-card text-center">
+            <h5>{{ subject }}</h5>
+            <h3>{{ data.present }}/{{ data.total }}</h3>
+            <p class="text-muted mb-0">
+                {% widthratio data.present data.total 100 %}% Present
+            </p>
+            <div class="progress mt-2">
+                <div class="progress-bar bg-success" style="width: {% widthratio data.present data.total 100 %}%"></div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">No attendance records found.</div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-list me-2"></i>Recent Attendance Records</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Subject</th>
+                                <th>Status</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in attendance_records %}
+                            <tr>
+                                <td>{{ record.date|date:"M d, Y" }}</td>
+                                <td>{{ record.subject.name }}</td>
+                                <td>
+                                    {% if record.is_present %}
+                                        <span class="badge bg-success">Present</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Absent</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ record.remarks|default:"-" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

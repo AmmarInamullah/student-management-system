@@ -1,0 +1,94 @@
+{% load custom_filters %}
+{% extends 'base.html' %}
+{% block title %}Students in {{ subject.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-body">
+                <h2 class="mb-0">
+                    <i class="fas fa-users me-2"></i>
+                    Students in {{ subject.name }}
+                </h2>
+                <p class="mb-0 mt-2">
+                    Course Code: {{ subject.code }} | Credits: {{ subject.credits }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-list me-2"></i>
+                    Enrolled Students ({{ student_count }})
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if students %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Year</th>
+                                    <th>Current Grade</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in students %}
+                                    <tr>
+                                        <td>{{ student.student_id }}</td>
+                                        <td>{{ student.user.get_full_name }}</td>
+                                        <td>{{ student.user.email }}</td>
+                                        <td>Year {{ student.year_level }}</td>
+                                        <td>
+                                            {% with grade=grades|get_item:student.id %}
+                                                {% if grade %}
+                                                    <span class="badge {% if grade.grade_letter == 'F' %}bg-danger{% elif grade.grade_letter == 'A' %}bg-success{% else %}bg-primary{% endif %}">
+                                                        {{ grade.grade_letter }} ({{ grade.percentage|floatformat:0 }}%)
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">No Grade</span>
+                                                {% endif %}
+                                            {% endwith %}
+                                        </td>
+                                        <td>
+                                            <a href="mailto:{{ student.user.email }}" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-envelope"></i> Contact
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No students enrolled in this subject yet.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-12">
+        <a href="{% url 'teacher_dashboard' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+        <a href="{% url 'upload_grades' %}" class="btn btn-primary">
+            <i class="fas fa-upload me-2"></i>Upload Grades
+        </a>
+    </div>
+</div>
+{% endblock %}
